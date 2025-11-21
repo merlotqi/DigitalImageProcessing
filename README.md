@@ -1,4 +1,4 @@
 # Introduction
 
-This is a code repository based on the knowledge from the book "3D Math Primer for Graphics and Game Development", which introduces mathematical knowledge in 3D software development and its C++ implementation.
+This is a collection of digital image processing algorithms. Image I/O is handled by `OpenCV`, which reads `cv::Mat` data into a custom, simple image structure `Image`. All subsequent algorithms are implemented in C++. Vector and matrix transformations are performed using the `Eigen` library.
 
