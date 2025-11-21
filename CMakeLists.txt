@@ -8,6 +8,8 @@ set(src_files
     common/image.cpp
     common/image.h
 
+    spaceAlgorithm/contrast_enhancement.cpp
+    spaceAlgorithm/contrast_enhancement.h
     spaceAlgorithm/image_inversion.cpp
     spaceAlgorithm/image_inversion.h
 )

@@ -1,21 +1,18 @@
-find_package(GTest CONFIG REQUIRED)
+find_package(GTest REQUIRED)
 
-file(GLOB_RECURSE SOURCES "*.cpp")
+file(GLOB_RECURSE _testfiles ${CMAKE_CURRENT_LIST_DIR}/*_test.cpp CONFIGURE_DEPEND)
 
-foreach(src ${SOURCES})
-    file(RELATIVE_PATH rel_path "${CMAKE_CURRENT_SOURCE_DIR}" "${src}")
-    get_filename_component(rel_dir "${rel_path}" DIRECTORY)
-    get_filename_component(file_name "${src}" NAME_WE)
+add_executable(DpiUnitTest ${_testfiles})
+target_link_libraries(DpiUnitTest PRIVATE DigitalImageProcessing GTest::GTest GTest::Main)
+enable_testing()
 
-    set(target "${file_name}")
-
-    add_executable(${target} ${src})
-    target_link_libraries(${target} PRIVATE 
-        GTest::gtest 
-        GTest::gtest_main
-        DigitalImageProcessing)
-
-    set_target_properties(${target} PROPERTIES 
-        FOLDER "Tests/${rel_dir}"
+foreach(_testfile ${_testfiles})
+    get_filename_component(_testname ${_testfile} NAME_WE)
+    string(REPLACE "_test" "" _suite_name ${_testname})
+    add_test(
+        NAME dpi_test_${_suite_name}
+        COMMAND DpiUnitTest --gtest_filter=${_suite_name}.*
     )
 endforeach()
+
+unset(_testfiles)

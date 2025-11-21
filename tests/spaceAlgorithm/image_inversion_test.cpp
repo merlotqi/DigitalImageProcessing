@@ -2,7 +2,7 @@
 
 #include <image_inversion.h>
 
-TEST(ImageInversionTest, InvertImage) {
+TEST(image_inversion, InvertImage) {
     Image img = read_image("tests/spaceAlgorithm/test_data/input_image.png");
     Image inverted_img = image_inversion::invert_image(img);
 

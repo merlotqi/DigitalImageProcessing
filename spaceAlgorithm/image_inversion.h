@@ -4,6 +4,6 @@
 
 namespace image_inversion {
 
-Image invert_image(const Image& img);
+Image invert_image(const Image &img);
 
 }// namespace image_inversion
