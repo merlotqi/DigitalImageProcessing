@@ -9,7 +9,7 @@ static std::vector<int> compute_histogram(const Image &image)
     {
         for (int j = 0; j < image.width; ++j)
         {
-            ++histogram[image.data[i][j]];
+            ++histogram[image[i][j]];
         }
     }
 
@@ -46,8 +46,8 @@ static Image equalization(const Image &image, const std::vector<double> &cdfs)
     {
         for (int j = 0; j < image.width; ++j)
         {
-            double equalizedValue = (cdfs[static_cast<int>(image.data[i][j])] - cdf_min) / (1.0 - cdf_min) * 255.0;
-            output_image.data[i][j] = static_cast<unsigned char>(std::clamp(equalizedValue, 0.0, 255.0));
+            double equalizedValue = (cdfs[static_cast<int>(image[i][j])] - cdf_min) / (1.0 - cdf_min) * 255.0;
+            output_image[i][j] = static_cast<unsigned char>(std::clamp(equalizedValue, 0.0, 255.0));
         }
     }
     return output_image;

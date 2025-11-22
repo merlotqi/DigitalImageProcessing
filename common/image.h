@@ -9,6 +9,16 @@ struct Image
     std::vector<std::vector<unsigned char>> data;
     int width;
     int height;
+
+    std::vector<unsigned char> operator[](size_t index) const
+    {
+        return data[index];
+    }
+
+    std::vector<unsigned char> &operator[](size_t index)
+    {
+        return data[index];
+    }
 };
 
 Image read_image(const std::string &filename);

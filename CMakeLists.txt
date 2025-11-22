@@ -1,39 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 project(DigitalImageProcessingProject)
 
+option(BUILD_DIP_TEST "Build Project DigitalImageProcessing Unit Tests" OFF)
+option(BUILD_DIP_EXAMPLE "Build Project DigitalImageProcessing Unit Tests" ON)
+
 find_package(OpenCV CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)
 
-set(IMAGE_DATA_PATH "${CMAKE_CURRENT_SOURCE_DIR}/images/")
-set(IMAGE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/processed/")
+add_library(DigitalImageProcessing STATIC)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/common/image_path.h.in
-               ${CMAKE_CURRENT_BINARY_DIR}/image_path.h)
-
-set(PROCESSED_DIR "${CMAKE_CURRENT_LIST_DIR}/processed")
-
-if(NOT EXISTS ${PROCESSED_DIR})
-    message(STATUS "Creating processed directory: ${PROCESSED_DIR}")
-    file(MAKE_DIRECTORY ${PROCESSED_DIR})
-else()
-    message(STATUS "Processed directory already exists: ${PROCESSED_DIR}")
-endif()
-
-set(src_files
-    common/image.cpp
-    common/image.h
-
-    spaceAlgorithm/contrast_enhancement.cpp
-    spaceAlgorithm/contrast_enhancement.h
-    spaceAlgorithm/histogram_equalization.cpp
-    spaceAlgorithm/histogram_equalization.h
-    spaceAlgorithm/image_inversion.cpp
-    spaceAlgorithm/image_inversion.h
-)
-
-add_library(DigitalImageProcessing 
-    ${src_files}
-)
+add_subdirectory(common)
+add_subdirectory(spaceAlgorithm)
 
 target_link_libraries(DigitalImageProcessing Eigen3::Eigen ${OpenCV_LIBS})
 
@@ -43,10 +20,12 @@ target_include_directories(DigitalImageProcessing PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-include(CTest)
-enable_testing()
+if (BUILD_DIP_TEST)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
-add_subdirectory(tests)
-
-add_subdirectory(examples)
-
+if (BUILD_DIP_EXAMPLE)
+    add_subdirectory(examples)
+endif()

@@ -18,7 +18,7 @@ Image read_image(const std::string &filename)
     {
         for (int j = 0; j < image.width; ++j)
         {
-            image.data[i][j] = img.at<unsigned char>(i, j);
+            image[i][j] = img.at<unsigned char>(i, j);
         }
     }
     return image;
@@ -31,7 +31,7 @@ void write_image(const std::string &filename, const Image &image)
     {
         for (int j = 0; j < image.width; ++j)
         {
-            img.at<unsigned char>(i, j) = image.data[i][j];
+            img.at<unsigned char>(i, j) = image[i][j];
         }
     }
     cv::imwrite(filename, img);
@@ -53,7 +53,7 @@ void image_show(const std::string &title, const Image &image)
     {
         for (int j = 0; j < image.width; ++j)
         {
-            img.at<unsigned char>(i, j) = image.data[i][j];
+            img.at<unsigned char>(i, j) = image[i][j];
         }
     }
     cv::imshow(title, img);

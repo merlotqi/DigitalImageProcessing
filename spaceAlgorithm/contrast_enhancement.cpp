@@ -20,7 +20,7 @@ Image contrast_enhancement(const Image &input_image, double f1, double f2, doubl
     {
         for (int j = 0; j < input_image.width; ++j)
         {
-            output.data[i][j] = value(input_image.data[i][j]);
+            output[i][j] = value(input_image[i][j]);
         }
     }
     return output;

@@ -10,7 +10,7 @@ Image image_inversion(const Image &img)
     {
         for (int j = 0; j < img.width; ++j)
         {
-            inverted_img.data[i][j] = MAX_PIXEL_VALUE - img.data[i][j];
+            inverted_img[i][j] = MAX_PIXEL_VALUE - img[i][j];
         }
     }
     return inverted_img;
