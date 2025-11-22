@@ -2,8 +2,8 @@
 
 #include <image.h>
 
-namespace contrast_enhancement {
+namespace image_space_algorithm {
 
-Image enhance_contrast(const Image &input_image);
+Image contrast_enhancement(const Image &input_image, double f1, double f2, double g1, double g2);
 
-}// namespace contrast_enhancement
+}// namespace image_space_algorithm

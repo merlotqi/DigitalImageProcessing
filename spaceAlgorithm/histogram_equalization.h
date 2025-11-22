@@ -1,9 +1,7 @@
-#pragma once
-
 #include <image.h>
 
 namespace image_space_algorithm {
 
-Image image_inversion(const Image &img);
+Image histogram_equalization(const Image &input_image);
 
 }// namespace image_space_algorithm

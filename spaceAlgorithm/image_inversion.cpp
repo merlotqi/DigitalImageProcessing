@@ -1,8 +1,8 @@
 #include "image_inversion.h"
 
-namespace image_inversion {
+namespace image_space_algorithm {
 
-Image invert_image(const Image &img)
+Image image_inversion(const Image &img)
 {
     static const unsigned char MAX_PIXEL_VALUE = 255;
     Image inverted_img = create_empty_image(img.width, img.height);
@@ -16,4 +16,4 @@ Image invert_image(const Image &img)
     return inverted_img;
 }
 
-}// namespace image_inversion
+}// namespace image_space_algorithm

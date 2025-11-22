@@ -1,0 +1,11 @@
+#pragma once
+
+#include <string>
+
+// clang-format off
+
+#define __IMAGE_DATA_PATH "@IMAGE_DATA_PATH@"
+#define __IMAGE_OUTPUT_PATH "@IMAGE_OUTPUT_PATH@"
+
+#define IMAGE_DATA_PATH(x) (std::string(__IMAGE_DATA_PATH) + x)
+#define IMAGE_OUTPUT_PATH(x) (std::string(__IMAGE_OUTPUT_PATH) + x)
