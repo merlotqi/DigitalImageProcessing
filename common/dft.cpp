@@ -157,12 +157,12 @@ static ComplexMatrix2d idftshift2D(const ComplexMatrix2d &input)
 
 static ComplexMatrix2d image_to_complex_matrix(const Image &image)
 {
-    ComplexMatrix2d complexImg(image.height, ComplexMatrix1d(image.width));
-    for (int i = 0; i < image.height; ++i)
+    ComplexMatrix2d complexImg(image.height(), ComplexMatrix1d(image.width()));
+    for (int i = 0; i < image.height(); ++i)
     {
-        for (int j = 0; j < image.width; ++j)
+        for (int j = 0; j < image.width(); ++j)
         {
-            complexImg[i][j] = Complex(static_cast<double>(image[i][j]) / 255.0, 0.0);
+            complexImg[i][j] = Complex(static_cast<double>(image(i, j)) / 255.0, 0.0);
         }
     }
     return complexImg;
@@ -172,7 +172,7 @@ static Image complex_matrix_to_image(const ComplexMatrix2d &mat)
 {
     const int M = mat.size();
     const int N = mat[0].size();
-    Image output = create_empty_image(M, N);
+    Image output(M, N);
 
     for (int i = 0; i < M; ++i)
     {
@@ -180,7 +180,7 @@ static Image complex_matrix_to_image(const ComplexMatrix2d &mat)
         {
             double value = std::real(mat[i][j]);
             value = std::max(0.0, std::min(255.0, value * 255.0));
-            output[i][j] = static_cast<unsigned int>(std::round(value));
+            output(i, j) = static_cast<unsigned int>(std::round(value));
         }
     }
     return output;
@@ -219,7 +219,7 @@ Image compute_magnitude_spectrum(const ComplexMatrix2d &spectrum)
 {
     const int M = spectrum.size();
     const int N = spectrum[0].size();
-    Image magnitude = create_empty_image(M, N);
+    Image magnitude(M, N);
 
     double maxMagnitude = 0.0;
     for (int m = 0; m < M; ++m)
@@ -239,7 +239,7 @@ Image compute_magnitude_spectrum(const ComplexMatrix2d &spectrum)
             double mag = std::abs(spectrum[m][n]);
             double logMag = std::log(1.0 + mag);
             double normalized = logMag / std::log(1.0 + maxMagnitude);
-            magnitude[m][n] = static_cast<unsigned char>(normalized * 255.0);
+            magnitude(m, n) = static_cast<unsigned char>(normalized * 255.0);
         }
     }
     return magnitude;
@@ -249,7 +249,7 @@ Image compute_phase_spectrum(const ComplexMatrix2d &spectrum)
 {
     const int M = spectrum.size();
     const int N = spectrum[0].size();
-    Image phase = create_empty_image(M, N);
+    Image phase(M, N);
 
     for (int m = 0; m < M; ++m)
     {
@@ -257,7 +257,7 @@ Image compute_phase_spectrum(const ComplexMatrix2d &spectrum)
         {
             double phaseAngle = std::arg(spectrum[m][n]);
             double normalized = (phaseAngle + M_PI) / (M_PI * 2.0);
-            phase[m][n] = static_cast<unsigned char>(normalized * 255.0);
+            phase(m, n) = static_cast<unsigned char>(normalized * 255.0);
         }
     }
     return phase;

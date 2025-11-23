@@ -4,7 +4,7 @@
 
 int main()
 {
-    Image img = read_image(IMAGE_DATA_PATH("citywall.png"));
+    Image img = read_image("../images/lena.png");
 
     auto dft = DFT::compute_dftshift(img);
 

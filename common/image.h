@@ -1,30 +1,56 @@
 #pragma once
 
+#include <assert.h>
 #include <image_path.h>
 #include <string>
 #include <vector>
 
-struct Image
+class Image
 {
-    std::vector<std::vector<unsigned char>> data;
-    int width;
-    int height;
+    std::vector<unsigned char> data_;
+    int width_;
+    int height_;
 
-    std::vector<unsigned char> operator[](size_t index) const
+public:
+    Image() : width_(0), height_(0) {}
+
+    Image(int width, int height) : width_(width), height_(height)
     {
-        return data[index];
+        data_.resize(width * height);
     }
 
-    std::vector<unsigned char> &operator[](size_t index)
+    void resize(int width, int height)
     {
-        return data[index];
+        width_ = width;
+        height_ = height;
+        data_.resize(width * height);
+    }
+
+    unsigned char &operator()(int row, int col)
+    {
+        assert(row >= 0 && row < width_);
+        assert(col >= 0 && col < height_);
+        return data_[col * width_ + row];
+    }
+
+    const unsigned char &operator()(int row, int col) const
+    {
+        assert(row >= 0 && row < width_);
+        assert(col >= 0 && col < height_);
+        return data_[col * width_ + row];
+    }
+    int width() const
+    {
+        return width_;
+    }
+    int height() const
+    {
+        return height_;
     }
 };
 
 Image read_image(const std::string &filename);
 
 void write_image(const std::string &filename, const Image &image);
-
-Image create_empty_image(int width, int height);
 
 void image_show(const std::string &title, const Image &image);

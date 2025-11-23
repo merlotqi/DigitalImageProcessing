@@ -1,13 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 project(DigitalImageProcessingProject)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 option(BUILD_DIP_TEST "Build Project DigitalImageProcessing Unit Tests" OFF)
 option(BUILD_DIP_EXAMPLE "Build Project DigitalImageProcessing Unit Tests" ON)
 
 find_package(OpenCV CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)
 
-add_library(DigitalImageProcessing STATIC)
+add_library(DigitalImageProcessing SHARED)
 
 add_subdirectory(common)
 add_subdirectory(spaceAlgorithm)

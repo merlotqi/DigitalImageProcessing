@@ -5,12 +5,12 @@ namespace image_space_algorithm {
 Image image_inversion(const Image &img)
 {
     static const unsigned char MAX_PIXEL_VALUE = 255;
-    Image inverted_img = create_empty_image(img.width, img.height);
-    for (int i = 0; i < img.height; ++i)
+    Image inverted_img(img.width(), img.height());
+    for (int i = 0; i < img.height(); ++i)
     {
-        for (int j = 0; j < img.width; ++j)
+        for (int j = 0; j < img.width(); ++j)
         {
-            inverted_img[i][j] = MAX_PIXEL_VALUE - img[i][j];
+            inverted_img(i, j) = MAX_PIXEL_VALUE - img(i, j);
         }
     }
     return inverted_img;
