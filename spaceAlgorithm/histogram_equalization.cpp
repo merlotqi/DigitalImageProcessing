@@ -6,9 +6,9 @@ namespace image_space_algorithm {
 static std::vector<int> compute_histogram(const Image &image)
 {
     std::vector<int> histogram(256, 0);
-    for (int i = 0; i < image.height(); ++i)
+    for (int i = 0; i < image.row(); ++i)
     {
-        for (int j = 0; j < image.width(); ++j)
+        for (int j = 0; j < image.column(); ++j)
         {
             ++histogram[image(i, j)];
         }
@@ -30,7 +30,7 @@ static std::vector<double> compute_cdf(const std::vector<int> &histogram, int to
 }
 static Image equalization(const Image &image, const std::vector<double> &cdfs)
 {
-    Image output_image(image.width(), image.height());
+    Image output_image(image.row(), image.column());
 
     // Find the minimum non-zero CDF value
     double cdf_min = 0.0;
@@ -43,9 +43,9 @@ static Image equalization(const Image &image, const std::vector<double> &cdfs)
         }
     }
 
-    for (int i = 0; i < image.height(); ++i)
+    for (int i = 0; i < image.row(); ++i)
     {
-        for (int j = 0; j < image.width(); ++j)
+        for (int j = 0; j < image.column(); ++j)
         {
             double equalizedValue = (cdfs[static_cast<int>(image(i, j))] - cdf_min) / (1.0 - cdf_min) * 255.0;
             output_image(i, j) = static_cast<unsigned char>(std::clamp(equalizedValue, 0.0, 255.0));
@@ -59,7 +59,7 @@ Image histogram_equalization(const Image &input_image)
     // Compute histogram
     std::vector<int> histogram = compute_histogram(input_image);
     // Compute CDF
-    std::vector<double> cdf = compute_cdf(histogram, input_image.width() * input_image.height());
+    std::vector<double> cdf = compute_cdf(histogram, input_image.row() * input_image.column());
     // Equalize the image
     Image output_image = equalization(input_image, cdf);
     return output_image;

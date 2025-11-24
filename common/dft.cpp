@@ -10,13 +10,13 @@ namespace DFT {
 
 static ComplexMatrix1d dft1D(const ComplexMatrix1d &input)
 {
-    const int N = input.size();
+    const size_t N = input.size();
     ComplexMatrix1d output(N);
 
-    for (int n = 0; n < N; ++n)
+    for (size_t n = 0; n < N; ++n)
     {
         Complex sum(0.0, 0.0);
-        for (int k = 0; k < N; ++k)
+        for (size_t k = 0; k < N; ++k)
         {
             double angle = -2.0 * M_PI * k * n / N;
             Complex twiddle(std::cos(angle), std::sin(angle));
@@ -29,12 +29,12 @@ static ComplexMatrix1d dft1D(const ComplexMatrix1d &input)
 
 static ComplexMatrix1d idft1D(const ComplexMatrix1d &input)
 {
-    const int N = input.size();
+    const size_t N = input.size();
     ComplexMatrix1d output(N);
-    for (int n = 0; n < N; ++n)
+    for (size_t n = 0; n < N; ++n)
     {
         Complex sum(0.0, 0.0);
-        for (int k = 0; k < N; ++k)
+        for (size_t k = 0; k < N; ++k)
         {
             double angle = 2.0 * M_PI * k * n / N;
             Complex twiddle(std::cos(angle), std::sin(angle));
@@ -47,76 +47,63 @@ static ComplexMatrix1d idft1D(const ComplexMatrix1d &input)
 
 static ComplexMatrix2d dft2D(const ComplexMatrix2d &input)
 {
-    const int M = input.size();
-    const int N = input.at(0).size();
-
-    ComplexMatrix2d output(M, ComplexMatrix1d(N));
-    ComplexMatrix2d temp(M, ComplexMatrix1d(N));
+    int M = input.row(), N = input.column();
+    ComplexMatrix2d temp(M, N), output(M, N);
 
     for (int i = 0; i < M; ++i)
     {
-        temp[i] = dft1D(input[i]);
+        ComplexMatrix1d row(N);
+        for (int j = 0; j < N; ++j) row[j] = input(i, j);
+        temp.row(i, dft1D(row));
     }
 
-    ComplexMatrix2d transposed(N, ComplexMatrix1d(M));
-    for (int u = 0; u < M; ++u)
+    for (int j = 0; j < N; ++j)
     {
-        for (int v = 0; v < N; ++v)
-        {
-            transposed[v][u] = temp[u][v];
-        }
+        ComplexMatrix1d col(M);
+        for (int i = 0; i < M; ++i) col[i] = temp(i, j);
+        output.column(j, dft1D(col));
     }
 
-    for (int i = 0; i < N; ++i)
-    {
-        auto colDFT = dft1D(transposed[i]);
-        for (int j = 0; j < M; ++j)
-        {
-            output[j][i] = colDFT[j];
-        }
-    }
     return output;
 }
 
 static ComplexMatrix2d idft2D(const ComplexMatrix2d &input)
 {
-    const int M = input.size();
-    const int N = input[0].size();
+    const int M = input.row();
+    const int N = input.column();
 
-    ComplexMatrix2d temp(M, ComplexMatrix1d(N));
-    ComplexMatrix2d output(M, ComplexMatrix1d(N));
+    ComplexMatrix2d temp(M, N);
+    ComplexMatrix2d output(M, N);
 
-    for (int u = 0; u < M; ++u)
+    for (int i = 0; i < M; ++i)
     {
-        temp[u] = idft1D(input[u]);
-    }
-
-    ComplexMatrix2d transposed(N, ComplexMatrix1d(M));
-    for (int u = 0; u < M; ++u)
-    {
-        for (int v = 0; v < N; ++v)
+        ComplexMatrix1d row_vec(N);
+        for (int j = 0; j < N; ++j)
         {
-            transposed[v][u] = temp[u][v];
+            row_vec[j] = input(i, j);
         }
+        temp.row(i, idft1D(row_vec));
     }
 
-    for (int v = 0; v < N; ++v)
+    for (int j = 0; j < N; ++j)
     {
-        auto colIDFT = idft1D(transposed[v]);
-        for (int u = 0; u < M; ++u)
+        ComplexMatrix1d col_vec(M);
+        for (int i = 0; i < M; ++i)
         {
-            output[u][v] = colIDFT[u];
+            col_vec[i] = temp(i, j);
         }
+        output.column(j, idft1D(col_vec));
     }
+
     return output;
 }
 
 static ComplexMatrix2d dftshift2D(const ComplexMatrix2d &input)
 {
-    const int M = input.size();
-    const int N = input[0].size();
+    const int M = input.row();
+    const int N = input.column();
 
-    ComplexMatrix2d output(M, ComplexMatrix1d(N));
+    ComplexMatrix2d output(M, N);
 
     const int shiftN = (N + 1) / 2;
     const int shiftM = (M + 1) / 2;
@@ -127,7 +114,7 @@ static ComplexMatrix2d dftshift2D(const ComplexMatrix2d &input)
         {
             int newM = (m + shiftM) % M;
             int newN = (n + shiftN) % N;
-            output[newM][newN] = input[m][n];
+            output(newM, newN) = input(m, n);
         }
     }
     return output;
@@ -135,10 +122,10 @@ static ComplexMatrix2d dftshift2D(const ComplexMatrix2d &input)
 
 static ComplexMatrix2d idftshift2D(const ComplexMatrix2d &input)
 {
-    const int M = input.size();
-    const int N = input.size();
+    const int M = input.row();
+    const int N = input.column();
 
-    ComplexMatrix2d output(M, ComplexMatrix1d(N));
+    ComplexMatrix2d output(M, N);
 
     const int shiftM = M / 2;
     const int shiftN = N / 2;
@@ -149,7 +136,7 @@ static ComplexMatrix2d idftshift2D(const ComplexMatrix2d &input)
         {
             int newM = (m + shiftM) % M;
             int newN = (n + shiftN) % N;
-            output[newM][newN] = input[m][n];
+            output(newM, newN) = input(m, n);
         }
     }
     return output;
@@ -157,12 +144,12 @@ static ComplexMatrix2d idftshift2D(const ComplexMatrix2d &input)
 
 static ComplexMatrix2d image_to_complex_matrix(const Image &image)
 {
-    ComplexMatrix2d complexImg(image.height(), ComplexMatrix1d(image.width()));
-    for (int i = 0; i < image.height(); ++i)
+    ComplexMatrix2d complexImg(image.row(), image.column());
+    for (int i = 0; i < image.row(); ++i)
     {
-        for (int j = 0; j < image.width(); ++j)
+        for (int j = 0; j < image.column(); ++j)
         {
-            complexImg[i][j] = Complex(static_cast<double>(image(i, j)) / 255.0, 0.0);
+            complexImg(i, j) = Complex(static_cast<double>(image(i, j)) / 255.0, 0.0);
         }
     }
     return complexImg;
@@ -170,22 +157,21 @@ static ComplexMatrix2d image_to_complex_matrix(const Image &image)
 
 static Image complex_matrix_to_image(const ComplexMatrix2d &mat)
 {
-    const int M = mat.size();
-    const int N = mat[0].size();
+    const int M = mat.row();
+    const int N = mat.column();
     Image output(M, N);
 
     for (int i = 0; i < M; ++i)
     {
         for (int j = 0; j < N; ++j)
         {
-            double value = std::real(mat[i][j]);
+            double value = std::real(mat(i, j));
             value = std::max(0.0, std::min(255.0, value * 255.0));
             output(i, j) = static_cast<unsigned int>(std::round(value));
         }
     }
     return output;
 }
-
 
 ComplexMatrix2d compute_dft(const Image &image)
 {
@@ -217,8 +203,8 @@ Image compute_idftshift(const ComplexMatrix2d &mat)
 
 Image compute_magnitude_spectrum(const ComplexMatrix2d &spectrum)
 {
-    const int M = spectrum.size();
-    const int N = spectrum[0].size();
+    const int M = spectrum.row();
+    const int N = spectrum.column();
     Image magnitude(M, N);
 
     double maxMagnitude = 0.0;
@@ -226,7 +212,7 @@ Image compute_magnitude_spectrum(const ComplexMatrix2d &spectrum)
     {
         for (int n = 0; n < N; ++n)
         {
-            double mag = std::abs(spectrum[m][n]);
+            double mag = std::abs(spectrum(m, n));
             if (mag > maxMagnitude)
                 maxMagnitude = mag;
         }
@@ -236,7 +222,7 @@ Image compute_magnitude_spectrum(const ComplexMatrix2d &spectrum)
     {
         for (int n = 0; n < N; ++n)
         {
-            double mag = std::abs(spectrum[m][n]);
+            double mag = std::abs(spectrum(m, n));
             double logMag = std::log(1.0 + mag);
             double normalized = logMag / std::log(1.0 + maxMagnitude);
             magnitude(m, n) = static_cast<unsigned char>(normalized * 255.0);
@@ -247,20 +233,19 @@ Image compute_magnitude_spectrum(const ComplexMatrix2d &spectrum)
 
 Image compute_phase_spectrum(const ComplexMatrix2d &spectrum)
 {
-    const int M = spectrum.size();
-    const int N = spectrum[0].size();
+    const int M = spectrum.row();
+    const int N = spectrum.column();
     Image phase(M, N);
 
     for (int m = 0; m < M; ++m)
     {
         for (int n = 0; n < N; ++n)
         {
-            double phaseAngle = std::arg(spectrum[m][n]);
+            double phaseAngle = std::arg(spectrum(m, n));
             double normalized = (phaseAngle + M_PI) / (M_PI * 2.0);
             phase(m, n) = static_cast<unsigned char>(normalized * 255.0);
         }
     }
     return phase;
 }
-
 }// namespace DFT

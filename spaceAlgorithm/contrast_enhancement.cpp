@@ -16,10 +16,10 @@ Image contrast_enhancement(const Image &input_image, double f1, double f2, doubl
         return static_cast<unsigned char>(std::clamp(r * v, 0.0, 255.0));
     };
 
-    Image output(input_image.width(), input_image.height());
-    for (int i = 0; i < input_image.height(); ++i)
+    Image output(input_image.row(), input_image.column());
+    for (int i = 0; i < input_image.row(); ++i)
     {
-        for (int j = 0; j < input_image.width(); ++j)
+        for (int j = 0; j < input_image.column(); ++j)
         {
             output(i, j) = value(input_image(i, j));
         }

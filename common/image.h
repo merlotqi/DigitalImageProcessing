@@ -8,44 +8,44 @@
 class Image
 {
     std::vector<unsigned char> data_;
-    int width_;
-    int height_;
+    int row_;
+    int column_;
 
 public:
-    Image() : width_(0), height_(0) {}
+    Image() : row_(0), column_(0) {}
 
-    Image(int width, int height) : width_(width), height_(height)
+    Image(int row, int column) : row_(row), column_(column)
     {
-        data_.resize(width * height);
+        data_.resize(row * column);
     }
 
-    void resize(int width, int height)
+    void resize(int row, int column)
     {
-        width_ = width;
-        height_ = height;
-        data_.resize(width * height);
+        row_ = row;
+        column_ = column;
+        data_.resize(row * column);
     }
 
     unsigned char &operator()(int row, int col)
     {
-        assert(row >= 0 && row < width_);
-        assert(col >= 0 && col < height_);
-        return data_[col * width_ + row];
+        assert(row >= 0 && row < row_);
+        assert(col >= 0 && col < column_);
+        return data_[col * row_ + row];
     }
 
     const unsigned char &operator()(int row, int col) const
     {
-        assert(row >= 0 && row < width_);
-        assert(col >= 0 && col < height_);
-        return data_[col * width_ + row];
+        assert(row >= 0 && row < row_);
+        assert(col >= 0 && col < column_);
+        return data_[col * row_ + row];
     }
-    int width() const
+    int row() const
     {
-        return width_;
+        return row_;
     }
-    int height() const
+    int column() const
     {
-        return height_;
+        return column_;
     }
 };
 

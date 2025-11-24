@@ -5,9 +5,9 @@ Image read_image(const std::string &filename)
 {
     cv::Mat img = cv::imread(filename, cv::IMREAD_GRAYSCALE);
     Image image(img.cols, img.rows);
-    for (int i = 0; i < image.height(); ++i)
+    for (int i = 0; i < image.row(); ++i)
     {
-        for (int j = 0; j < image.width(); ++j)
+        for (int j = 0; j < image.column(); ++j)
         {
             image(i, j) = img.at<unsigned char>(i, j);
         }
@@ -17,10 +17,10 @@ Image read_image(const std::string &filename)
 
 void write_image(const std::string &filename, const Image &image)
 {
-    cv::Mat img(image.height(), image.width(), CV_8UC1);
-    for (int i = 0; i < image.height(); ++i)
+    cv::Mat img(image.row(), image.column(), CV_8UC1);
+    for (int i = 0; i < image.row(); ++i)
     {
-        for (int j = 0; j < image.width(); ++j)
+        for (int j = 0; j < image.column(); ++j)
         {
             img.at<unsigned char>(i, j) = image(i, j);
         }
@@ -30,10 +30,10 @@ void write_image(const std::string &filename, const Image &image)
 
 void image_show(const std::string &title, const Image &image)
 {
-    cv::Mat img(image.height(), image.width(), CV_8UC1);
-    for (int i = 0; i < image.height(); ++i)
+    cv::Mat img(image.row(), image.column(), CV_8UC1);
+    for (int i = 0; i < image.row(); ++i)
     {
-        for (int j = 0; j < image.width(); ++j)
+        for (int j = 0; j < image.column(); ++j)
         {
             img.at<unsigned char>(i, j) = image(i, j);
         }
