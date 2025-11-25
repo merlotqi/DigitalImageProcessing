@@ -1,16 +1,21 @@
 #include <dft.h>
 #include <histogram_equalization.h>
 #include <image_inversion.h>
+#include <roberts.h>
+#include <prewitt.h>
+#include <sobel.h>
+#include <laplacian.h>
 
 int main()
 {
-    Image img = read_image("../images/lena.png");
+    Image img = read_image(IMAGE_DATA_PATH("/lena.png"));
 
-    auto dft = DFT::compute_dftshift(img);
-
-    auto im = DFT::compute_magnitude_spectrum(dft);
-
-    write_image(IMAGE_OUTPUT_PATH("citywall_he.png"), im);
+    write_image(IMAGE_OUTPUT_PATH("reberts.png"), segmentation::reberts(img));
+    write_image(IMAGE_OUTPUT_PATH("prewitt.png"), segmentation::prewitt(img));
+    write_image(IMAGE_OUTPUT_PATH("sobel.png"), segmentation::sobel(img));
+    write_image(IMAGE_OUTPUT_PATH("laplacian_4.png"), segmentation::laplacian(img, 4));
+    write_image(IMAGE_OUTPUT_PATH("laplacian_8.png"), segmentation::laplacian(img, 8));
+    write_image(IMAGE_OUTPUT_PATH("laplacian_20.png"), segmentation::laplacian(img, 20));
 
     return 0;
 }

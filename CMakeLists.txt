@@ -13,7 +13,9 @@ find_package(Eigen3 CONFIG REQUIRED)
 add_library(DigitalImageProcessing SHARED)
 
 add_subdirectory(common)
+add_subdirectory(filters)
 add_subdirectory(spaceAlgorithm)
+add_subdirectory(segmentation)
 
 target_link_libraries(DigitalImageProcessing Eigen3::Eigen ${OpenCV_LIBS})
 

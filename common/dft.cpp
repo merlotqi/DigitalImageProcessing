@@ -54,14 +54,14 @@ static ComplexMatrix2d dft2D(const ComplexMatrix2d &input)
     {
         ComplexMatrix1d row(N);
         for (int j = 0; j < N; ++j) row[j] = input(i, j);
-        temp.row(i, dft1D(row));
+        temp.setRow(i, dft1D(row));
     }
 
     for (int j = 0; j < N; ++j)
     {
         ComplexMatrix1d col(M);
         for (int i = 0; i < M; ++i) col[i] = temp(i, j);
-        output.column(j, dft1D(col));
+        output.setColumn(j, dft1D(col));
     }
 
     return output;
@@ -82,7 +82,7 @@ static ComplexMatrix2d idft2D(const ComplexMatrix2d &input)
         {
             row_vec[j] = input(i, j);
         }
-        temp.row(i, idft1D(row_vec));
+        temp.setRow(i, idft1D(row_vec));
     }
 
     for (int j = 0; j < N; ++j)
@@ -92,7 +92,7 @@ static ComplexMatrix2d idft2D(const ComplexMatrix2d &input)
         {
             col_vec[i] = temp(i, j);
         }
-        output.column(j, idft1D(col_vec));
+        output.setColumn(j, idft1D(col_vec));
     }
 
     return output;
