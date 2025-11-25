@@ -1,9 +1,9 @@
 #include "prewitt.h"
-
+#include <gaussian.h>
 
 namespace segmentation {
 
-int laplacian_kernel(int r, int c, const Image &image, int k)
+static int laplacian_kernel(int r, int c, const Image &image, int k)
 {
     if (k == 8)
     {

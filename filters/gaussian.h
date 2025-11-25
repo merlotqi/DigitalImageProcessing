@@ -3,15 +3,18 @@
 #include <vector>
 
 #include <array2D.h>
+#include <image.h>
 
 using GaussianKernel2D = Array2D<double>;
 
-namespace Gaussian {
+namespace filters {
 
-std::vector<double> guassianKernel1D(double sigma, int size = -1);
+std::vector<double> guassianKernel1D(double sigma, int radius = -1);
 
-GaussianKernel2D guassianKernel2D(double sigma, int size = -1);
+GaussianKernel2D guassianKernel2D(double sigma, int radius = -1);
 
-GaussianKernel2D gaussianLoGKernel2D(double sigma, int size = -1);
+GaussianKernel2D gaussianLoGKernel2D(double sigma, int radius = -1);
 
-}// namespace Gaussian
+Image gaussianFilter(const Image& image, double sigma, int radius = -1);
+
+}// namespace filters
