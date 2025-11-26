@@ -16,6 +16,7 @@ add_subdirectory(common)
 add_subdirectory(filters)
 add_subdirectory(spaceAlgorithm)
 add_subdirectory(segmentation)
+add_subdirectory(primitive)
 
 target_link_libraries(DigitalImageProcessing Eigen3::Eigen ${OpenCV_LIBS})
 
