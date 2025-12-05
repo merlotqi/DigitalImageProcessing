@@ -11,6 +11,7 @@
 
 #include <harris_detector.h>
 
+
 void acm()
 {
     Image augustusOctavian = read_image(IMAGE_DATA_PATH("/augustusOctavian.png"));
@@ -27,8 +28,7 @@ void acm()
         cv::circle(mat, cv::Point(p.x(), p.y()), 1, cv::Scalar(0, 0, 255), 1);
     }
 
-    cv::imshow("active_contour_model.png", mat);
-    cv::waitKey(0);
+    cv::imwrite(IMAGE_OUTPUT_PATH("active_contour_model.png"), mat);
 }
 
 void harris()
@@ -36,8 +36,31 @@ void harris()
     Image img = read_image(IMAGE_DATA_PATH("/check.png"));
     primitive::HarrisDetector harris;
     cv::Mat mt = harris.detect(img);
-    cv::imshow("harris.png", mt);
-    cv::waitKey(0);
+    cv::imwrite(IMAGE_OUTPUT_PATH("harris.png"), mt);
+}
+
+void harris_opencv()
+{
+    cv::Mat image = cv::imread(IMAGE_DATA_PATH("/check.png"), cv::IMREAD_COLOR);
+
+    cv::Mat result1;
+    cv::Mat gray;
+    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    
+    cv::Mat harris_response;
+    cornerHarris(gray, harris_response, 2, 3, 0.04);
+    
+    cv::Mat result_opencv = image.clone();
+    cv::normalize(harris_response, harris_response, 0, 255, cv::NORM_MINMAX, CV_32FC1,cv:: Mat());
+    for (int i = 0; i < harris_response.rows; i++) {
+        for (int j = 0; j < harris_response.cols; j++) {
+            if ((int)harris_response.at<float>(i, j) > 120) {
+                circle(result_opencv, cv::Point(j, i), 3, cv::Scalar(0, 0, 255), 1);
+            }
+        }
+    }
+
+    cv::imwrite(IMAGE_OUTPUT_PATH("harris_opencv.png"), result_opencv);
 }
 
 int main()
@@ -53,5 +76,6 @@ int main()
     write_image(IMAGE_OUTPUT_PATH("marrHildreth_20_2_3.png"), segmentation::marrHildreth(img, 20, 2.0, 3));
 
     harris();
+    harris_opencv();
     return 0;
 }
